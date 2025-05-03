@@ -13,8 +13,10 @@ function App() {
   const [error, setError] = useState('');
   const [serverStatus, setServerStatus] = useState(null);
 
-  // Backend URL
-  const BACKEND_URL = 'http://localhost:3001';
+  // Update the BACKEND_URL constant to handle both development and production environments
+  const BACKEND_URL = process.env.NODE_ENV === 'production' 
+    ? '/api' 
+    : 'http://localhost:3001';
 
   // Initialize Smartcar object
   const smartcar = new Smartcar({

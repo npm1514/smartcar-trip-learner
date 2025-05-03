@@ -199,12 +199,26 @@ app.get('/debug', (req, res) => {
   });
 });
 
-// Start server
-const PORT = 3001;
-app.listen(PORT, () => {
-  console.log(`----------------------------------------`);
-  console.log(`Smartcar server running on port ${PORT}`);
-  console.log(`Using client ID: ${process.env.SMARTCAR_CLIENT_ID?.substring(0, 10)}...`);
-  console.log(`Using redirect URI: ${process.env.SMARTCAR_REDIRECT_URI}`);
-  console.log(`----------------------------------------`);
-}); 
+// Root endpoint
+app.get('/', (req, res) => {
+  res.status(200).json({
+    message: 'Smartcar API is running',
+    status: 'online',
+    env: process.env.NODE_ENV || 'development'
+  });
+});
+
+// For local development
+if (process.env.NODE_ENV !== 'production') {
+  const PORT = process.env.PORT || 3001;
+  app.listen(PORT, () => {
+    console.log(`----------------------------------------`);
+    console.log(`Smartcar server running on port ${PORT}`);
+    console.log(`Using client ID: ${process.env.SMARTCAR_CLIENT_ID?.substring(0, 10)}...`);
+    console.log(`Using redirect URI: ${process.env.SMARTCAR_REDIRECT_URI}`);
+    console.log(`----------------------------------------`);
+  });
+}
+
+// Export for serverless
+module.exports = app; 

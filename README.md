@@ -52,7 +52,7 @@ A React application that connects to the Smartcar API to view your vehicle's dat
 
 1. Start the backend server:
    ```
-   cd backend
+   cd api
    npm start
    ```
 

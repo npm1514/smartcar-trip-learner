@@ -1,0 +1,15 @@
+{
+  "name": "smartcar-app",
+  "version": "1.0.0",
+  "private": true,
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "scripts": {
+    "dev": "vercel dev",
+    "build": "cd frontend && npm install && npm run build"
+  },
+  "devDependencies": {
+    "vercel": "^28.4.12"
+  }
+}

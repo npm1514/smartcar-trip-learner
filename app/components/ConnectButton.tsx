@@ -56,15 +56,27 @@ export default function ConnectButton({ onAuthSuccess, setLoading, setError }: C
   return (
     <div className="card max-w-md mx-auto text-center">
       <div className="mb-8">
-        <img 
-          src="/car-icon.png" 
-          alt="Car Icon" 
-          className="mx-auto mb-4 w-24 h-24 opacity-80"
-          onError={(e) => {
-            // Fallback if image doesn't exist
-            (e.target as HTMLImageElement).style.display = 'none';
-          }}
-        />
+        <div className="flex justify-center mb-4">
+          <svg 
+            xmlns="http://www.w3.org/2000/svg" 
+            width="96" 
+            height="96" 
+            viewBox="0 0 24 24" 
+            fill="none" 
+            stroke="currentColor" 
+            strokeWidth="1.5" 
+            strokeLinecap="round" 
+            strokeLinejoin="round" 
+            className="text-gray-500"
+          >
+            <path d="M7 17m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"></path>
+            <path d="M17 17m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"></path>
+            <path d="M5 9l2 -4h8l2 4"></path>
+            <path d="M5 9h12v5a3 3 0 0 1 -3 3h-6a3 3 0 0 1 -3 -3v-5z"></path>
+            <path d="M10 5v4"></path>
+            <path d="M13 5v4"></path>
+          </svg>
+        </div>
         <h2 className="text-2xl font-bold mb-2">Connect Your Vehicle</h2>
         <p className="text-gray-600 dark:text-gray-300">
           Connect your vehicle to access information like location, odometer readings, and more.

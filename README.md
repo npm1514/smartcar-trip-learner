@@ -1,91 +1,36 @@
-# Smartcar Vehicle Dashboard
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-A React application that connects to the Smartcar API to view your vehicle's data.
+## Getting Started
 
-## Project Structure
+First, run the development server:
 
-- `frontend/`: React application for the user interface
-- `backend/`: Node.js Express server for secure API interactions
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
+```
 
-## Prerequisites
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-- Node.js and npm installed
-- A Smartcar developer account and API credentials
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-## Setup
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-1. Clone this repository
-   ```
-   git clone https://github.com/your-username/smartcar-trip-learner.git
-   cd smartcar-trip-learner
-   ```
+## Learn More
 
-2. Install dependencies for both frontend and backend
-   ```
-   # Frontend dependencies
-   cd frontend
-   npm install
-   
-   # Backend dependencies
-   cd ../backend
-   npm install
-   ```
+To learn more about Next.js, take a look at the following resources:
 
-3. Update environment variables:
-   
-   **Backend (.env file in backend folder)**
-   ```
-   CLIENT_ID=your-smartcar-client-id
-   CLIENT_SECRET=your-smartcar-client-secret
-   REDIRECT_URI=https://javascript-sdk.smartcar.com/v2/redirect?app_origin=http://localhost:3000
-   PORT=8000
-   ```
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-   **Frontend (.env file in frontend folder)**
-   ```
-   REACT_APP_CLIENT_ID=your-smartcar-client-id
-   REACT_APP_REDIRECT_URI=https://javascript-sdk.smartcar.com/v2/redirect?app_origin=http://localhost:3000
-   REACT_APP_SERVER_URL=http://localhost:8000
-   ```
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-## Running the Application
+## Deploy on Vercel
 
-1. Start the backend server:
-   ```
-   cd api
-   npm start
-   ```
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-2. In a new terminal, start the frontend application:
-   ```
-   cd frontend
-   npm start
-   ```
-
-3. Open your browser and navigate to [http://localhost:3000](http://localhost:3000)
-
-## How It Works
-
-1. Click the "Connect My Vehicle" button to initiate the Smartcar Connect flow.
-2. You'll be redirected to Smartcar Connect for authentication.
-3. After authorization, the app will display your vehicle information including:
-   - Make, model, and year
-   - VIN number
-   - Current odometer reading
-   - Current location coordinates
-
-## Testing
-
-This app is configured to use Smartcar's test mode by default, which means:
-
-- You can use any username/password combination to login
-- You can select any vehicle brand to test with
-- All vehicle data is simulated
-
-To connect to a real vehicle, change the `mode` parameter from `'test'` to `'live'` in `frontend/src/App.js`.
-
-## Troubleshooting
-
-- Make sure both frontend and backend servers are running
-- Verify your Smartcar credentials are correct in both .env files
-- Check browser console and server logs for error messages 
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.

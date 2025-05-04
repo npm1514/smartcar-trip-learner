@@ -37,21 +37,45 @@ export default function Home() {
       
       console.log('Authorization code received');
       
-      // Check backend status
-      const status = await checkBackendStatus();
-      if (status.status !== 'running') {
-        setError('Backend server is not running');
+      // Check backend status with timeout
+      try {
+        const statusPromise = checkBackendStatus();
+        const timeoutPromise = new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('Backend status check timed out')), 10000)
+        );
+        
+        const status = await Promise.race([statusPromise, timeoutPromise]);
+        if (status.status !== 'running') {
+          setError('Backend server is not running');
+          setLoading(false);
+          return;
+        }
+      } catch (statusError: any) {
+        console.error('Status check error:', statusError);
+        setError(`Backend connectivity issue: ${statusError.message}`);
         setLoading(false);
         return;
       }
 
-      // Exchange authorization code for access token
+      // Exchange authorization code for access token with timeout
       console.log('Exchanging code for token...');
-      const exchangeResponse = await axios.get(`/api/exchange?code=${code}`);
-      console.log('Exchange response:', exchangeResponse.data);
-      
-      if (!exchangeResponse.data.success) {
-        setError(exchangeResponse.data.error || 'Failed to exchange code for token');
+      try {
+        const exchangePromise = axios.get(`/api/exchange?code=${code}`);
+        const timeoutPromise = new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('Token exchange timed out')), 15000)
+        );
+        
+        const exchangeResponse = await Promise.race([exchangePromise, timeoutPromise]);
+        console.log('Exchange response:', exchangeResponse.data);
+        
+        if (!exchangeResponse.data.success) {
+          setError(exchangeResponse.data.error || 'Failed to exchange code for token');
+          setLoading(false);
+          return;
+        }
+      } catch (exchangeError: any) {
+        console.error('Exchange error:', exchangeError);
+        setError(`Token exchange failed: ${exchangeError.message}`);
         setLoading(false);
         return;
       }
@@ -59,10 +83,15 @@ export default function Home() {
       // Add a small delay to ensure token processing
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      // Get vehicle information
+      // Get vehicle information with timeout
       console.log('Fetching vehicle information...');
       try {
-        const response = await axios.get('/api/vehicle');
+        const vehiclePromise = axios.get('/api/vehicle');
+        const timeoutPromise = new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('Vehicle data fetch timed out')), 15000)
+        );
+        
+        const response = await Promise.race([vehiclePromise, timeoutPromise]);
         console.log('Vehicle data received:', response.data);
         
         setVehicle(response.data);
@@ -70,22 +99,27 @@ export default function Home() {
       } catch (vehicleError: any) {
         console.error('Error fetching vehicle:', vehicleError);
         
-        // Try again after a delay
-        setTimeout(async () => {
-          try {
-            console.log('Retrying vehicle fetch...');
-            const response = await axios.get('/api/vehicle');
-            console.log('Vehicle data received on retry:', response.data);
-            
-            setVehicle(response.data);
-            setLoading(false);
-          } catch (retryError: any) {
-            console.error('Retry failed:', retryError);
-            const errorMsg = retryError.response?.data?.error || 'Failed to get vehicle data';
-            setError(errorMsg);
-            setLoading(false);
-          }
-        }, 2000);
+        // Try again after a delay with timeout
+        try {
+          await new Promise(resolve => setTimeout(resolve, 2000));
+          console.log('Retrying vehicle fetch...');
+          
+          const retryPromise = axios.get('/api/vehicle');
+          const timeoutPromise = new Promise((_, reject) => 
+            setTimeout(() => reject(new Error('Vehicle data retry timed out')), 15000)
+          );
+          
+          const response = await Promise.race([retryPromise, timeoutPromise]);
+          console.log('Vehicle data received on retry:', response.data);
+          
+          setVehicle(response.data);
+          setLoading(false);
+        } catch (retryError: any) {
+          console.error('Retry failed:', retryError);
+          const errorMsg = retryError.response?.data?.error || 'Failed to get vehicle data';
+          setError(errorMsg);
+          setLoading(false);
+        }
       }
     } catch (error: any) {
       console.error('API request error:', error);

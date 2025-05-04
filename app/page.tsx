@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import ConnectButton from './components/ConnectButton';
 import VehicleInfo from './components/VehicleInfo';
 
@@ -40,7 +40,7 @@ export default function Home() {
       // Check backend status with timeout
       try {
         const statusPromise = checkBackendStatus();
-        const timeoutPromise = new Promise((_, reject) => 
+        const timeoutPromise = new Promise<never>((_, reject) => 
           setTimeout(() => reject(new Error('Backend status check timed out')), 10000)
         );
         
@@ -60,12 +60,12 @@ export default function Home() {
       // Exchange authorization code for access token with timeout
       console.log('Exchanging code for token...');
       try {
-        const exchangePromise = axios.get(`/api/exchange?code=${code}`);
-        const timeoutPromise = new Promise((_, reject) => 
+        const exchangePromise: Promise<AxiosResponse<any>> = axios.get(`/api/exchange?code=${code}`);
+        const timeoutPromise = new Promise<never>((_, reject) => 
           setTimeout(() => reject(new Error('Token exchange timed out')), 15000)
         );
         
-        const exchangeResponse = await Promise.race([exchangePromise, timeoutPromise]);
+        const exchangeResponse = await Promise.race([exchangePromise, timeoutPromise]) as AxiosResponse<any>;
         console.log('Exchange response:', exchangeResponse.data);
         
         if (!exchangeResponse.data.success) {
@@ -86,12 +86,12 @@ export default function Home() {
       // Get vehicle information with timeout
       console.log('Fetching vehicle information...');
       try {
-        const vehiclePromise = axios.get('/api/vehicle');
-        const timeoutPromise = new Promise((_, reject) => 
+        const vehiclePromise: Promise<AxiosResponse<any>> = axios.get('/api/vehicle');
+        const timeoutPromise = new Promise<never>((_, reject) => 
           setTimeout(() => reject(new Error('Vehicle data fetch timed out')), 15000)
         );
         
-        const response = await Promise.race([vehiclePromise, timeoutPromise]);
+        const response = await Promise.race([vehiclePromise, timeoutPromise]) as AxiosResponse<any>;
         console.log('Vehicle data received:', response.data);
         
         setVehicle(response.data);
@@ -104,12 +104,12 @@ export default function Home() {
           await new Promise(resolve => setTimeout(resolve, 2000));
           console.log('Retrying vehicle fetch...');
           
-          const retryPromise = axios.get('/api/vehicle');
-          const timeoutPromise = new Promise((_, reject) => 
+          const retryPromise: Promise<AxiosResponse<any>> = axios.get('/api/vehicle');
+          const timeoutPromise = new Promise<never>((_, reject) => 
             setTimeout(() => reject(new Error('Vehicle data retry timed out')), 15000)
           );
           
-          const response = await Promise.race([retryPromise, timeoutPromise]);
+          const response = await Promise.race([retryPromise, timeoutPromise]) as AxiosResponse<any>;
           console.log('Vehicle data received on retry:', response.data);
           
           setVehicle(response.data);

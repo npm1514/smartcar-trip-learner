@@ -28,7 +28,7 @@ export default function ConnectButton({ onAuthSuccess, setLoading, setError }: C
     const smartcar = new Smartcar({
       clientId: process.env.NEXT_PUBLIC_SMARTCAR_CLIENT_ID,
       redirectUri: process.env.NEXT_PUBLIC_SMARTCAR_REDIRECT_URI,
-      scope: ['required:read_vehicle_info', 'read_odometer', 'read_location'],
+      scope: ['required:read_vehicle_info', 'read_odometer', 'read_location', 'read_battery'],
       mode: 'live',
       onComplete,
     });

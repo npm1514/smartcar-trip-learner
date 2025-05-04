@@ -70,6 +70,46 @@ export async function GET() {
         ...vehicleInfo.data
       };
 
+      // Try to get battery information first
+      try {
+        console.log('Fetching battery information...');
+        const batteryResponse = await withTimeout(
+          axios.get(`https://api.smartcar.com/v2.0/vehicles/${store.vehicleId}/battery`, {
+            headers: { 'Authorization': `Bearer ${store.accessToken}` }
+          }),
+          10000
+        );
+        vehicleData.battery = {
+          type: 'ev',
+          percentRemaining: batteryResponse.data.percentRemaining,
+          range: batteryResponse.data.range,
+          ...batteryResponse.data
+        };
+        console.log('EV battery data received');
+      } catch (batteryError: any) {
+        console.log('EV battery data not available, trying fuel...');
+        
+        // If battery fails, try fuel (for gas vehicles)
+        try {
+          const fuelResponse = await withTimeout(
+            axios.get(`https://api.smartcar.com/v2.0/vehicles/${store.vehicleId}/fuel`, {
+              headers: { 'Authorization': `Bearer ${store.accessToken}` }
+            }),
+            10000
+          );
+          vehicleData.battery = {
+            type: 'fuel',
+            percentRemaining: fuelResponse.data.percentRemaining,
+            range: fuelResponse.data.range,
+            ...fuelResponse.data
+          };
+          console.log('Fuel data received');
+        } catch (fuelError: any) {
+          console.log('Neither battery nor fuel data available');
+          // Continue without this data
+        }
+      }
+
       // Try to get additional vehicle info (with error handling for each request)
       try {
         console.log('Fetching detailed vehicle info...');
